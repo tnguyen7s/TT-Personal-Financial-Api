@@ -1,5 +1,12 @@
+using Personal_Financial_WebApi.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// Add DbContext
+var connectionString = builder.Configuration.GetConnectionString("TT");
+builder.Services.AddDbContext<TtDbContext>(options => options.UseSqlServer(connectionString));
+                
 // Add services to the container.
 
 builder.Services.AddControllers();
