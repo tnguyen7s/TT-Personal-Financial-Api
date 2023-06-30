@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Personal_Financial_WebApi.Data.Entities
 {
-    [PrimaryKey(nameof(UserIdentifier),nameof(Item), nameof(Date))]
+    [PrimaryKey(nameof(UserIdentifier),nameof(Item))]
     public class WishItem
     {
         [Required]
@@ -14,12 +14,8 @@ namespace Personal_Financial_WebApi.Data.Entities
         [Required]
         public string? Item {get;set;} 
 
-        public DateTime Date {get;set;}
-
         public int Amount {get;set;}
 
         public string? Comment {get;set;} 
-
-        
     }
 }

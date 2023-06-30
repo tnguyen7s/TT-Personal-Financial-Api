@@ -1,3 +1,4 @@
+using EntityFramework.Exceptions.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Personal_Financial_WebApi.Data.Entities;
 
@@ -7,7 +8,12 @@ namespace Personal_Financial_WebApi.Data
     {
         public TtDbContext(DbContextOptions<TtDbContext> options):base(options){
 
-        }   
+        }  
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseExceptionProcessor();
+        } 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Users
@@ -38,6 +44,9 @@ namespace Personal_Financial_WebApi.Data
             modelBuilder.Entity<Expense>().Property(u=>u.Limit)
                         .HasColumnType("smallint");
             modelBuilder.Entity<Expense>().HasIndex(e=>new {e.UserIdentifier, e.Category, e.Month, e.Year});
+            modelBuilder.Entity<Expense>().HasIndex(e=>new {e.UserIdentifier, e.Month, e.Year});
+            modelBuilder.Entity<Expense>().HasIndex(e=>e.UserIdentifier);
+
             // User <-> Expenses | One 2 Many
             modelBuilder.Entity<User>()
                         .HasMany<Expense>()
@@ -50,11 +59,12 @@ namespace Personal_Financial_WebApi.Data
             modelBuilder.Entity<Save4Good>().Property(u=>u.Item)
                         .HasColumnType("varchar(100)");
             modelBuilder.Entity<Save4Good>().Property(u=>u.Date)
-                        .HasColumnType("date");
+                        .HasColumnType("datetime");
             modelBuilder.Entity<Save4Good>().Property(u=>u.Amount)
                         .HasColumnType("smallint");
             modelBuilder.Entity<Save4Good>()
                         .HasIndex(s=>new {s.UserIdentifier, s.Item, s.Date});
+            modelBuilder.Entity<Save4Good>().HasIndex(s=>s.UserIdentifier);
             modelBuilder.Entity<User>()
                         .HasMany<Save4Good>()
                         .WithOne()
@@ -65,13 +75,14 @@ namespace Personal_Financial_WebApi.Data
             modelBuilder.Entity<Donation>().Property(u=>u.SentTo)
                         .HasColumnType("varchar(100)");
             modelBuilder.Entity<Donation>().Property(u=>u.Date)
-                        .HasColumnType("date");
+                        .HasColumnType("datetime");
             modelBuilder.Entity<Donation>().Property(u=>u.Amount)
                         .HasColumnType("smallint");
             modelBuilder.Entity<Donation>().Property(u=>u.Comment)
                         .HasColumnType("varchar(200)");
             modelBuilder.Entity<Donation>()
                         .HasIndex(s=>new {s.UserIdentifier, s.Date, s.SentTo});
+            modelBuilder.Entity<Donation>().HasIndex(d=>d.UserIdentifier);
             modelBuilder.Entity<Donation>()
                         .HasOne<User>()
                         .WithMany()
@@ -83,15 +94,16 @@ namespace Personal_Financial_WebApi.Data
             modelBuilder.Entity<Loan>().Property(u=>u.SecondStakeHolder)
                         .HasColumnType("varchar(50)");
             modelBuilder.Entity<Loan>().Property(u=>u.Date)
-                        .HasColumnType("date");
+                        .HasColumnType("datetime");
             modelBuilder.Entity<Loan>().Property(u=>u.Amount)
                         .HasColumnType("smallint");
-            modelBuilder.Entity<Loan>().Property(u=>u.Owned)
+            modelBuilder.Entity<Loan>().Property(u=>u.IsOwner)
                         .HasColumnType("tinyint");
             modelBuilder.Entity<Loan>().Property(u=>u.Done)
                         .HasColumnType("tinyint");
             modelBuilder.Entity<Loan>()
                         .HasIndex(e=> new {e.UserIdentifier,e.SecondStakeHolder,e.Date});
+            modelBuilder.Entity<Loan>().HasIndex(l=>l.UserIdentifier);
             modelBuilder.Entity<Loan>()
                         .HasOne<User>()
                         .WithMany()
@@ -101,14 +113,13 @@ namespace Personal_Financial_WebApi.Data
                         .HasColumnType("varchar(10)");
             modelBuilder.Entity<WishItem>().Property(u=>u.Item)
                         .HasColumnType("varchar(100)");       
-            modelBuilder.Entity<WishItem>().Property(u=>u.Date)
-                        .HasColumnType("date");
             modelBuilder.Entity<WishItem>().Property(u=>u.Amount)
                         .HasColumnType("smallmoney");
             modelBuilder.Entity<WishItem>().Property(u=>u.Comment)
                         .HasColumnType("varchar(200)");
             modelBuilder.Entity<WishItem>()
-                        .HasIndex(e=>new {e.UserIdentifier,e.Item,e.Date});
+                        .HasIndex(e=>new {e.UserIdentifier,e.Item});
+            modelBuilder.Entity<WishItem>().HasIndex(l=>l.UserIdentifier);
             modelBuilder.Entity<WishItem>()
                         .HasOne<User>()
                         .WithMany()

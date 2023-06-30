@@ -19,7 +19,8 @@ namespace Personal_Financial_WebApi.Migrations
                     FullName = table.Column<string>(type: "varchar(50)", nullable: false),
                     TotalBalance = table.Column<decimal>(type: "money", nullable: false),
                     TotalSavingForGood = table.Column<decimal>(type: "money", nullable: false),
-                    TotalDonated = table.Column<decimal>(type: "money", nullable: false)
+                    TotalDonated = table.Column<decimal>(type: "money", nullable: false),
+                    LastCheckin = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +33,7 @@ namespace Personal_Financial_WebApi.Migrations
                 {
                     UserIdentifier = table.Column<string>(type: "varchar(10)", nullable: false),
                     SentTo = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Date = table.Column<DateTime>(type: "date", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime", nullable: false),
                     Amount = table.Column<short>(type: "smallint", nullable: false),
                     Comment = table.Column<string>(type: "varchar(200)", nullable: true)
                 },
@@ -75,9 +76,9 @@ namespace Personal_Financial_WebApi.Migrations
                 {
                     UserIdentifier = table.Column<string>(type: "varchar(10)", nullable: false),
                     SecondStakeHolder = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Date = table.Column<DateTime>(type: "date", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime", nullable: false),
                     Amount = table.Column<short>(type: "smallint", nullable: false),
-                    Owned = table.Column<byte>(type: "tinyint", nullable: false),
+                    IsOwner = table.Column<byte>(type: "tinyint", nullable: false),
                     Done = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
@@ -97,7 +98,7 @@ namespace Personal_Financial_WebApi.Migrations
                 {
                     UserIdentifier = table.Column<string>(type: "varchar(10)", nullable: false),
                     Item = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Date = table.Column<DateTime>(type: "date", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime", nullable: false),
                     Amount = table.Column<short>(type: "smallint", nullable: false)
                 },
                 constraints: table =>
@@ -117,13 +118,12 @@ namespace Personal_Financial_WebApi.Migrations
                 {
                     UserIdentifier = table.Column<string>(type: "varchar(10)", nullable: false),
                     Item = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Date = table.Column<DateTime>(type: "date", nullable: false),
                     Amount = table.Column<decimal>(type: "smallmoney", nullable: false),
                     Comment = table.Column<string>(type: "varchar(200)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WishItems", x => new { x.UserIdentifier, x.Item, x.Date });
+                    table.PrimaryKey("PK_WishItems", x => new { x.UserIdentifier, x.Item });
                     table.ForeignKey(
                         name: "FK_WishItems_Users_UserIdentifier",
                         column: x => x.UserIdentifier,
@@ -158,9 +158,9 @@ namespace Personal_Financial_WebApi.Migrations
                 column: "Identifier");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WishItems_UserIdentifier_Item_Date",
+                name: "IX_WishItems_UserIdentifier_Item",
                 table: "WishItems",
-                columns: new[] { "UserIdentifier", "Item", "Date" });
+                columns: new[] { "UserIdentifier", "Item" });
         }
 
         /// <inheritdoc />

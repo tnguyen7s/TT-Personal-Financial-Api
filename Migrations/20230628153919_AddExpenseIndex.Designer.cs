@@ -12,8 +12,8 @@ using Personal_Financial_WebApi.Data;
 namespace Personal_Financial_WebApi.Migrations
 {
     [DbContext(typeof(TtDbContext))]
-    [Migration("20230622034825_InitialDb")]
-    partial class InitialDb
+    [Migration("20230628153919_AddExpenseIndex")]
+    partial class AddExpenseIndex
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace Personal_Financial_WebApi.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime");
 
                     b.Property<short>("Amount")
                         .HasColumnType("smallint");
@@ -43,6 +43,8 @@ namespace Personal_Financial_WebApi.Migrations
                         .HasColumnType("varchar(200)");
 
                     b.HasKey("UserIdentifier", "SentTo", "Date");
+
+                    b.HasIndex("UserIdentifier");
 
                     b.HasIndex("UserIdentifier", "Date", "SentTo");
 
@@ -71,6 +73,10 @@ namespace Personal_Financial_WebApi.Migrations
 
                     b.HasKey("UserIdentifier", "Category", "Month", "Year");
 
+                    b.HasIndex("UserIdentifier");
+
+                    b.HasIndex("UserIdentifier", "Month", "Year");
+
                     b.HasIndex("UserIdentifier", "Category", "Month", "Year");
 
                     b.ToTable("Expenses");
@@ -85,7 +91,7 @@ namespace Personal_Financial_WebApi.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime");
 
                     b.Property<short>("Amount")
                         .HasColumnType("smallint");
@@ -93,10 +99,12 @@ namespace Personal_Financial_WebApi.Migrations
                     b.Property<byte>("Done")
                         .HasColumnType("tinyint");
 
-                    b.Property<byte>("Owned")
+                    b.Property<byte>("IsOwner")
                         .HasColumnType("tinyint");
 
                     b.HasKey("UserIdentifier", "SecondStakeHolder", "Date");
+
+                    b.HasIndex("UserIdentifier");
 
                     b.HasIndex("UserIdentifier", "SecondStakeHolder", "Date");
 
@@ -112,12 +120,14 @@ namespace Personal_Financial_WebApi.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime");
 
                     b.Property<short>("Amount")
                         .HasColumnType("smallint");
 
                     b.HasKey("UserIdentifier", "Item", "Date");
+
+                    b.HasIndex("UserIdentifier");
 
                     b.HasIndex("UserIdentifier", "Item", "Date");
 
@@ -132,6 +142,9 @@ namespace Personal_Financial_WebApi.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("LastCheckin")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("TotalBalance")
                         .HasColumnType("money");
@@ -157,18 +170,17 @@ namespace Personal_Financial_WebApi.Migrations
                     b.Property<string>("Item")
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("date");
-
                     b.Property<decimal>("Amount")
                         .HasColumnType("smallmoney");
 
                     b.Property<string>("Comment")
                         .HasColumnType("varchar(200)");
 
-                    b.HasKey("UserIdentifier", "Item", "Date");
+                    b.HasKey("UserIdentifier", "Item");
 
-                    b.HasIndex("UserIdentifier", "Item", "Date");
+                    b.HasIndex("UserIdentifier");
+
+                    b.HasIndex("UserIdentifier", "Item");
 
                     b.ToTable("WishItems");
                 });

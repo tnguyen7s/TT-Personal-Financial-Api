@@ -20,5 +20,19 @@ namespace Personal_Financial_WebApi.Data.Entities
 
         [Required]
         public int TotalDonated { get; set; }
+
+        [Required]
+        public DateTime LastCheckin { get; set; }
+
+        public User Clone(){
+            return new User{
+                Identifier = this.Identifier,
+                FullName = this.FullName,
+                TotalBalance = this.TotalBalance,
+                TotalDonated = this.TotalDonated,
+                TotalSavingForGood = this.TotalSavingForGood,
+                LastCheckin = this.LastCheckin
+            };
+        }
     }
 }

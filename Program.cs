@@ -3,6 +3,18 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var myCorsPolicy = "MyCorsPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(myCorsPolicy, builder =>
+    {
+        builder.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithExposedHeaders("Content-Disposition");
+    });
+});
+
 // Add DbContext
 var connectionString = builder.Configuration.GetConnectionString("TT");
 builder.Services.AddDbContext<TtDbContext>(options => options.UseSqlServer(connectionString));
@@ -24,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(myCorsPolicy);
 
 app.UseAuthorization();
 

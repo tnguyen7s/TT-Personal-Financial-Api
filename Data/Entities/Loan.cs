@@ -19,7 +19,7 @@ namespace Personal_Financial_WebApi.Data.Entities
 
         public int Amount {get;set;}
 
-        public bool Owned {get;set;}
+        public bool IsOwner {get;set;}
         
         public bool Done {get;set;}
     }
